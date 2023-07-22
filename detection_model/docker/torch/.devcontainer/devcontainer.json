@@ -1,0 +1,14 @@
+{
+	// コンテナ名
+	"name": "container_torch", 
+
+	// docker-compose.ymlの場所
+	"dockerComposeFile": "../../docker-compose.yml",
+
+	// docker-compose.yml 内のサービス名
+    "service": "torch",
+
+	// コンテナ内のどこをワークスペースとするか
+    "workspaceFolder": "/work"
+
+}

@@ -1,0 +1,38 @@
+version: '3.2'
+services:
+
+  # バージョンごとにサービスを追加する
+  # Pytorch 1.10.0
+  torch:
+
+    # Dockerfile の場所
+    # コンテキストは torch110 を指定しない
+    # （torch110をコンテキストにするとDockerfileで親ディレクトリにある requirements.txt がコピーできない ）
+    build:
+      context: .  
+      dockerfile: torch/Dockerfile
+      
+    #shm_size: '24gb'  # RTX3090
+    #shm_size: '16gb'
+    
+    # devcontainer.json で決めたコンテナ名
+    container_name: 'container_torch'
+
+    # コンテナの正常終了を防ぐ（コンテナ側に仮想端末を設置し、コンテナを持続させる）
+    tty: true
+
+    # ローカルファイルのマウント
+    # 左がローカルファイルの場所, 右がコンテナ上の場所
+    volumes: 
+      - ../../:/work
+
+    # GPUの設定 マウント
+    #deploy:
+      #resources:
+        #reservations:
+          #devices:
+            #- driver: nvidia
+              #count: 1
+              #capabilities: [gpu]
+
+
