@@ -14,10 +14,12 @@ if __name__ == '__main__':
     with open(config_path) as f: 
         config: dict = json.load(f)
 
-    # 今日の日付を取得し保存用フォルダを作成
+    # 今日の日付を取得し3つのラベルそれぞれの保存用フォルダを作成
     today = datetime.datetime.now().strftime('%Y_%m_%d')
     save_dir = config['save_dir'] + today
-    os.makedirs(save_dir, exist_ok = True)
+    os.makedirs(os.path.join(save_dir, 'none'), exist_ok = True)
+    os.makedirs(os.path.join(save_dir, 'yellow'), exist_ok = True)
+    os.makedirs(os.path.join(save_dir, 'red'), exist_ok = True)
     
     ### インスタンス生成
     camera = Camera(camID)
@@ -39,21 +41,28 @@ if __name__ == '__main__':
         #　積層灯の状態予測と表示
         machine_status, score, update_flag = model.predict(image=frame)  
         camera.show_status(image=frame.copy(), status=machine_status, score=score) 
-        
+
         # 積層灯の状態が更新された
         if update_flag: 
             
             # Noneへの変化の場合は無視する
             if not machine_status == 'none':
-            
-                # 積層灯の画像を保存
-                camera.save(path=image_tmp_path, image=frame)
-                line.send(message='変化を検知: ' + machine_status, image_path=image_tmp_path)
+
+                # 平日18:00～25:00 or 休日 の場合は通知する
+                dt_now = datetime.datetime.now()
+                HH = dt_now.strftime('%H')
+                day = dt_now.strftime('%A')
+
+                if (18 <= int(HH) <= 23) or (0 == int(HH)) or (day == 'Saturday') or (day == 'Sunday'):
+                
+                    # 積層灯の画像を保存
+                    camera.save(path=image_tmp_path, image=frame)
+                    line.send(message='変化を検知: ' + machine_status, image_path=image_tmp_path)
         
         # 学習用データの収集
         if count > 19:
             dt_now = datetime.datetime.now()
             now = dt_now.strftime('%Y_%m_%d_%H_%M_%S')
-            camera.save(path=os.path.join(save_dir, now + '.jpg'), image=frame)
+            camera.save(path=os.path.join(save_dir, model.predicted_color, now + '.jpg'), image=frame)
             count = 0
         count += 1    

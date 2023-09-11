@@ -7,6 +7,7 @@ class Model():
     def __init__(self, model_path):
         self.__model = tf.keras.models.load_model(model_path)
         self.color_by_index = ['none', 'yellow', 'red']
+        self.predicted_color = ''
         self.__machine_status = ''
         self.__status_update_count = 0
         
@@ -23,12 +24,12 @@ class Model():
         
         # 最も確率が高いラベルのラベル名を取得
         label_index = np.argmax(predict[0])
-        color = self.color_by_index[label_index]
+        self.predicted_color = self.color_by_index[label_index]
         score = predict[0][label_index]
         
         # 積層灯の状態を更新する
         if score > 0.7:
-            update_flag = self.__update_status(color)
+            update_flag = self.__update_status(self.predicted_color)
         else:
             update_flag = False
         
