@@ -27,7 +27,10 @@ class Model():
         score = predict[0][label_index]
         
         # 積層灯の状態を更新する
-        update_flag = self.__update_status(color)
+        if score > 0.7:
+            update_flag = self.__update_status(color)
+        else:
+            update_flag = False
         
         return self.__machine_status, score, update_flag
     
@@ -43,8 +46,10 @@ class Model():
             self.__status_update_count += 1
             
             # 状態の更新を行う
-            if self.__status_update_count > 5:
+            if self.__status_update_count > 3:
                 self.__machine_status = color
                 update_flag = True
         
+        else: self.__status_update_count = 0
+
         return update_flag
