@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     # 今日の日付を取得し3つのラベルそれぞれの保存用フォルダを作成
     today = datetime.datetime.now().strftime('%Y_%m_%d')
-    save_dir = config['save_dir'] + today
+    save_dir = config['save_dir']
     os.makedirs(os.path.join(save_dir, 'none'), exist_ok = True)
     os.makedirs(os.path.join(save_dir, 'yellow'), exist_ok = True)
     os.makedirs(os.path.join(save_dir, 'red'), exist_ok = True)
