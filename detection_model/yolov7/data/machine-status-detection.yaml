@@ -1,0 +1,13 @@
+
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: /work/detection_model/dataset/images/train
+val: /work/detection_model/dataset/images/valid
+#test: ./coco/test-dev2017.txt  # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+
+# number of classes
+nc: 3
+
+# class names
+names: [ 'RED', 'YELLOW', 'NONE' ]
+
+# python3 train.py --epochs 100 --workers 8 --device 0 --batch-size 16 --data data/machine-status-detection.yaml --img 480 480 --cfg cfg/training/machine-status-detection.yaml --weights 'yolov7_training.pt' --name yolov7-custom --hyp data/hyp.scratch.custom.yaml
