@@ -55,8 +55,11 @@ class Model_yolo():
 
         return update_flag
 
-    def draw_predict(self, frame, detections):
+    def draw_predict(self, frame, camera_num, detections):
         detected_frame = draw(frame, detections)
         detected_frame = cv2.resize(detected_frame, (800, 600))
-        cv2.imshow('predict', detected_frame)
-        cv2.moveWindow('predict', 470, 0)
+        cv2.imshow('predict'+str(camera_num), detected_frame)
+        if camera_num == 0:
+            cv2.moveWindow('predict'+str(camera_num), 470, 0)
+        else:
+            cv2.moveWindow('predict'+str(camera_num), 0, 370)
