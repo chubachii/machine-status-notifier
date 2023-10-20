@@ -1,0 +1,6 @@
+{
+    "token": "40cQIu851DKaXraTiHcniQe3NpxhR3dYZZCxM5MZ9yQ",
+    "save_dir": "C:/Users/chubachi/Desktop/machine-status-notifier/dataset/",
+    "model_path": "C:/Users/chubachi/Desktop/machine-status-notifier/easy-yolov7/best.pt",
+    "class_path": "C:/Users/chubachi/Desktop/machine-status-notifier/easy-yolov7/coco.yaml"
+}

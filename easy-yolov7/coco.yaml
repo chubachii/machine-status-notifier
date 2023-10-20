@@ -1,0 +1,7 @@
+classes:
+  - name: RED
+    color: '#ff170f'
+  - name: YELLOW
+    color: '#ffb547'
+  - name: NONE
+    color: '#00ffc3'
