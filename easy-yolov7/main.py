@@ -2,7 +2,7 @@ from camera_class import Camera
 from line_class import Line
 from model_class_yolo import Model_yolo
 
-import json, os, datetime
+import json, os, datetime, jpholiday
 
 camIDs = [0, 1]
 config_path = os.path.join(os.path.dirname(__file__), 'config.json')
@@ -63,7 +63,11 @@ if __name__ == '__main__':
                     HH = dt_now.strftime('%H')
                     day = dt_now.strftime('%A')
 
-                    if (18 <= int(HH) <= 23) or (0 == int(HH)) or (day == 'Saturday') or (day == 'Sunday'):
+                    if jpholiday.is_holiday(datetime.datetime.now()) 
+                        or (18 <= int(HH) <= 23) 
+                        or (0 == int(HH)) 
+                        or (day == 'Saturday') 
+                        or (day == 'Sunday'):
                     
                         # 積層灯の画像を保存
                         camera.save(path=image_tmp_path, image=frame)
@@ -76,7 +80,7 @@ if __name__ == '__main__':
                 dt_now = datetime.datetime.now()
                 now = dt_now.strftime('%Y_%m_%d_%H_%M_%S')
             
-                camera.save(path=os.path.join(save_dir, str(camID), predicted_status, now + '.jpg'), image=frame)
+                camera.save(path=os.path.join(save_dir, str(i), predicted_status, now + '.jpg'), image=frame)
             
                 count = 0
             count += 1    
