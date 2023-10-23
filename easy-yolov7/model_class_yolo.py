@@ -10,6 +10,7 @@ class Model_yolo():
         self.__yolov7.load(model_path, classes=class_path, device='cpu')
         self.predicted_color = ''
         self.__machine_status = ''
+        self.__status_update_count = 0
 
     def predict(self, image):
       
