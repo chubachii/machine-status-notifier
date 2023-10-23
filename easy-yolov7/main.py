@@ -63,11 +63,11 @@ if __name__ == '__main__':
                     HH = dt_now.strftime('%H')
                     day = dt_now.strftime('%A')
 
-                    if jpholiday.is_holiday(datetime.datetime.now()) 
+                    if (jpholiday.is_holiday(datetime.datetime.now()) 
                         or (18 <= int(HH) <= 23) 
                         or (0 == int(HH)) 
                         or (day == 'Saturday') 
-                        or (day == 'Sunday'):
+                        or (day == 'Sunday')):
                     
                         # 積層灯の画像を保存
                         camera.save(path=image_tmp_path, image=frame)
