@@ -1,4 +1,4 @@
-import cv2
+import cv2, numpy
 
 class Camera():
 
@@ -23,7 +23,7 @@ class Camera():
     def wait_key(self, wait_time):
         return cv2.waitKey(wait_time)
     
-    def show_status(self, image, status, score):
+    def draw_status(self, image, status, score):
         
         cv2.putText(image, 
             text=status + ' : ' + str(round(score*100, 3)) + '%', 
@@ -34,5 +34,10 @@ class Camera():
             thickness=2
         )
         
-        cv2.imshow('status', image)
+        return image
+
+    def show_merged_image(self, image1, image2):
+        cv2.imshow('status', numpy.hstack((image1, image2)))
+        cv2.moveWindow('status', 0, 200)
+
     
