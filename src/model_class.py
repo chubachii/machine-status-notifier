@@ -22,13 +22,16 @@ class Model():
             detected_label = results[0].names[box.cls[0].item()]
             if detected_label != 'none': label = detected_label
 
-            # 検出したボックス、ラベル名を描画する
+            conf = int(box.conf[0].item() * 100) # 検出の信頼度
+
+            # 検出したボックス、ラベル名、信頼度を描画する
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             frame_draw = plot_box(
                 image=frame_draw, 
                 pt1={'x': x1, 'y': y1}, 
                 pt2={'x': x2, 'y': y2},
-                label=label
+                label=label,
+                conf=conf
             )
 
         # 積層灯の状態を更新する
@@ -66,14 +69,16 @@ class Model():
         return update_flag
     
 
-def plot_box(image, pt1, pt2, label, padding=6, font_scale=3):
+def plot_box(image, pt1, pt2, label, conf, padding=6, font_scale=3):
+
+    text = f'{label} {conf}%'.upper()
 
     cv2.rectangle(image, (pt1['x'] - 1, pt1['y']), (pt2['x'], pt2['y']), colors[label], thickness=2, lineType=cv2.LINE_AA)
     res_scale = (image.shape[0] + image.shape[1])/1600
     font_scale = font_scale * res_scale
     font_width, font_height = 0, 0
     font_face = cv2.FONT_HERSHEY_DUPLEX
-    text_size = cv2.getTextSize(label, font_face, fontScale=font_scale, thickness=1)[0]
+    text_size = cv2.getTextSize(text, font_face, fontScale=font_scale, thickness=1)[0]
 
     if text_size[0] > font_width:
         font_width = text_size[0]
@@ -90,6 +95,7 @@ def plot_box(image, pt1, pt2, label, padding=6, font_scale=3):
     cv2.rectangle(image, (pt1['x'] - 2, pt1['y']-20), p3, colors[label], -1, lineType=cv2.LINE_AA)
     x = pt1['x'] + padding
     y = pt1['y'] - padding
-    cv2.putText(image, label.upper(), (x, y-20), font_face, font_scale, [0, 0, 0], thickness=1, lineType=cv2.LINE_AA)
+
+    cv2.putText(image, text, (x, y-20), font_face, font_scale, [0, 0, 0], thickness=1, lineType=cv2.LINE_AA)
     
     return image
