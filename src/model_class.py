@@ -16,11 +16,10 @@ class Model():
         results = self.__model.predict(source=image, save=False, verbose=False)
         frame_draw = image.copy()
 
-        # 検出した色を一つに絞り込む（none よりも red, yellowを優先する）
-        label = 'none'
+        # 検出結果を描画する
+        boxes = []
         for box in results[0].boxes:
             detected_label = results[0].names[box.cls[0].item()]
-            if detected_label != 'none': label = detected_label
 
             conf = int(box.conf[0].item() * 100) # 検出の信頼度
 
@@ -30,9 +29,19 @@ class Model():
                 image=frame_draw, 
                 pt1={'x': x1, 'y': y1}, 
                 pt2={'x': x2, 'y': y2},
-                label=label,
+                label=detected_label,
                 conf=conf
             )
+
+            # 1つのリストにまとめる
+            boxes.append({'label': detected_label, 'conf': conf})
+        
+        # confが最大のboxを取り出す
+        if len(boxes) > 0:
+            max_conf_box = max(boxes, key=lambda x: x['conf'])
+            label = max_conf_box['label']
+        else:
+            label = 'none'
 
         # 積層灯の状態を更新する
         update_flag = self.__update_status(label)
