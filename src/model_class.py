@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import cv2
 
+CONF_THD = 0.6
 colors = {'red': (0, 0, 255), 'yellow': (0, 240, 255), 'none': (210, 240, 0)}
 
 class Model():
@@ -23,15 +24,16 @@ class Model():
 
             conf = int(box.conf[0].item() * 100) # 検出の信頼度
 
-            # 検出したボックス、ラベル名、信頼度を描画する
-            x1, y1, x2, y2 = map(int, box.xyxy[0])
-            frame_draw = plot_box(
-                image=frame_draw, 
-                pt1={'x': x1, 'y': y1}, 
-                pt2={'x': x2, 'y': y2},
-                label=detected_label,
-                conf=conf
-            )
+            if conf > CONF_THD*100:
+                # 検出したボックス、ラベル名、信頼度を描画する
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                frame_draw = plot_box(
+                    image=frame_draw, 
+                    pt1={'x': x1, 'y': y1}, 
+                    pt2={'x': x2, 'y': y2},
+                    label=detected_label,
+                    conf=conf
+                )
 
             # 1つのリストにまとめる
             boxes.append({'label': detected_label, 'conf': conf})
@@ -39,7 +41,8 @@ class Model():
         # confが最大のboxを取り出す
         if len(boxes) > 0:
             max_conf_box = max(boxes, key=lambda x: x['conf'])
-            label = max_conf_box['label']
+            if max_conf_box['conf'] > CONF_THD*100:
+                label = max_conf_box['label']
         else:
             label = 'none'
 
