@@ -39,13 +39,12 @@ class Model():
             boxes.append({'label': detected_label, 'conf': conf})
         
         # confが最大のboxを取り出す
+        label = 'none'
         if len(boxes) > 0:
             max_conf_box = max(boxes, key=lambda x: x['conf'])
             if max_conf_box['conf'] > CONF_THD*100:
                 label = max_conf_box['label']
-        else:
-            label = 'none'
-
+            
         # 積層灯の状態を更新する
         update_flag = self.__update_status(label)
         
